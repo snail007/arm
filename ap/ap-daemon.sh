@@ -12,7 +12,7 @@ if [ -z "$APWLAN_IS_OK" ] || [ -z "$NETWLAN_IS_OK" ] ;then
 fi
 
 
-HASWLAN=`ifconfig $APWLAN | grep addr `
+HASWLAN=`ifconfig $APWLAN | grep 255.255 `
 
 if [ -z "$HASWLAN" ] ;then
     ifconfig $APWLAN down
