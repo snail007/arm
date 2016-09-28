@@ -22,19 +22,19 @@ if [ -z "$HASWLAN" ] ;then
     echo "$APWLAN up?false,ifup"
 fi
 
-hostapd_IS_OK=`ps -ef |grep hostapd`
+hostapd_IS_OK=`ps -ef|grep  hostapd|grep -v grep`
 if [ -z "$hostapd_IS_OK" ] ;then
     service hostapd restart
     echo "hostapd_IS_OK?false,restarted"
 fi
 
-dnsmasq_IS_OK=`ps -ef |grep dnsmasq`
+dnsmasq_IS_OK=`ps -ef |grep dnsmasq|grep -v grep`
 if [ -z "$dnsmasq_IS_OK" ] ;then
     service dnsmasq restart
     echo "dnsmasq_IS_OK?false,restarted"
 fi
 
-udhcpd_IS_OK=`ps -ef |grep udhcpd`
+udhcpd_IS_OK=`ps -ef |grep udhcpd|grep -v grep`
 if [ -z "$udhcpd_IS_OK" ] ;then
     service udhcpd restart
     echo "udhcpd_IS_OK?false,restarted"
