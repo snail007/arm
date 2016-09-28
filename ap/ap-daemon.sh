@@ -1,4 +1,5 @@
 #!/bin/bash
+source /etc/profile
 APWLAN=wlan3
 NETWLAN=wlan1
 APNAME=SnailAP
