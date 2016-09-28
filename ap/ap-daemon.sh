@@ -5,7 +5,7 @@ APNAME=SnailAP
 
 APWLAN_IS_OK=`ifconfig -a | grep $APWLAN`
 NETWLAN_IS_OK=`ifconfig -a | grep $NETWLAN`
-if [ -z $APWLAN_IS_OK ] || [ -z $NETWLAN_IS_OK ] ;then
+if [ -z "$APWLAN_IS_OK" ] || [ -z "$NETWLAN_IS_OK" ] ;then
     echo $APWLAN or $NETWLAN not found
     exit 1
 fi
@@ -13,7 +13,7 @@ fi
 
 HASWLAN=`ifconfig $APWLAN | grep addr `
 
-if [ -z $HASWLAN ] ;then
+if [ -z "$HASWLAN" ] ;then
     ifconfig $APWLAN down
     ifdown $APWLAN
     ifup $APWLAN
@@ -29,7 +29,7 @@ service udhcpd status|| service udhcpd restart
 
 
 AP_IS_OK=`iwlist $NETWLAN scanning|grep ESSID|grep $APNAME`
-if [ -z $AP_IS_OK ] ;then
+if [ -z "$AP_IS_OK" ] ;then
     service hostpad restart
     echo "AP_IS_OK?false,restarted"
 fi
