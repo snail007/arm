@@ -18,16 +18,18 @@ if [ -z $HASWLAN ];then
     ifdown $APWLAN
     ifup $APWLAN
     iptables-restore < /etc/iptables.ipv4.nat
+    echo "$APWLAN up?false,ifup"
 fi
 
-pidof hostpad || service hostpad restart
+service hostapd status|| service hostapd restart
 
-pidof dnsmasq || service dnsmasq restart
+service dnsmasq status || service dnsmasq restart
 
-pidof udhcpd || service udhcpd restart
+service udhcpd status|| service udhcpd restart
 
 
 AP_IS_OK=`iwlist $NETWLAN scanning|grep ESSID|grep $APNAME`
 if [ -z $AP_IS_OK ];then
     service hostpad restart
+    echo "AP_IS_OK?false,restarted"
 fi
