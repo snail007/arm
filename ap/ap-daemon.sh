@@ -1,0 +1,33 @@
+#!/bin/bash
+APWLAN=wlan3
+NETWLAN=wlan1
+APNAME=SnailAP
+
+APWLAN_IS_OK=`ifconfig -a | grep $APWLAN `
+NETWLAN_IS_OK=`ifconfig -a | grep $NETWLAN `
+if [ -z $APWLAN_IS_OK ] || [ -z $NETWLAN_IS_OK ];then
+    echo $APWLAN or $NETWLAN not found
+    exit 1
+fi
+
+
+HASWLAN=`ifconfig $APWLAN | grep addr `
+
+if [ -z $HASWLAN ];then
+    ifconfig $APWLAN down
+    ifdown $APWLAN
+    ifup $APWLAN
+    iptables-restore < /etc/iptables.ipv4.nat
+fi
+
+pidof hostpad || service hostpad restart
+
+pidof dnsmasq || service dnsmasq restart
+
+pidof udhcpd || service udhcpd restart
+
+
+AP_IS_OK=`iwlist $NETWLAN scanning|grep ESSID|grep $APNAME`
+if [ -z $AP_IS_OK ];then
+    service hostpad restart
+fi

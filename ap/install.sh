@@ -6,7 +6,7 @@ if [ ! -f /etc/default/udhcpd.orig ] ;then
 fi
 cp -f udhcpd.default /etc/default/udhcpd
 
-echo -n "please input wlan name for udhcpd , default [wlan0]:"
+echo -n "please input wlan name for AP , default [wlan0]:"
 
 read WLAN
 
@@ -14,7 +14,12 @@ if [ -z $WLAN ];then
     WLAN=wlan0
 fi
 
-sed -i "s/wlan0/$WLAN/g"  /etc/default/udhcpd
+if [ ! -f /etc/udhcpd.conf.orig ] ;then
+    mv /etc/udhcpd.conf /etc/udhcpd.conf.orig
+fi
+cp -f udhcpd.conf /etc/udhcpd.conf
+
+sed -i "s/wlan0/$WLAN/g"  /etc/udhcpd.conf
 
 ####################hostapd########################
 
@@ -87,7 +92,7 @@ sed -i "s/wlan0/$WLAN/g"  /etc/dnsmasq.conf
 systemctl daemon-reload
 
 ifconfig $WLAN down
-ifdow $WLAN
+ifdown $WLAN
 ifup $WLAN
 
 systemctl enable hostapd
@@ -101,5 +106,9 @@ systemctl status udhcpd
 systemctl enable dnsmasq
 systemctl restart dnsmasq
 systemctl status dnsmasq
+
+
+
+
 
 
