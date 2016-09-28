@@ -65,12 +65,15 @@ sh -c "iptables-save > /etc/iptables.ipv4.nat"
 sysctl -p
 HASNAT=`grep -rn "iptables.ipv4.nat" /etc/network/interfaces`
 if [ -z $HASNAT ];then
-    echo "iptables.ipv4.nat added"
     echo "up iptables-restore < /etc/iptables.ipv4.nat">>/etc/network/interfaces
+    echo "iptables.ipv4.nat added"
 else
     echo "iptables.ipv4.nat skiped"
 fi
 
+echo "iface $WLAN inet static">>/etc/network/interfaces.d/$WLAN
+echo "        address 192.168.8.1">>/etc/network/interfaces.d/$WLAN
+echo "        network 255.255.255.0">>/etc/network/interfaces.d/$WLAN
 
 ####################dnsmasq########################
 if [ ! -f /etc/dnsmasq.conf.orig ] ;then
@@ -83,6 +86,10 @@ sed -i "s/wlan0/$WLAN/g"  /etc/dnsmasq.conf
 ####################service########################
 systemctl daemon-reload
 
+ifconfig $WLAN down
+ifdow $WLAN
+ifup $WLAN
+
 systemctl enable hostapd
 systemctl restart hostapd
 systemctl status hostapd
@@ -94,3 +101,5 @@ systemctl status udhcpd
 systemctl enable dnsmasq
 systemctl restart dnsmasq
 systemctl status dnsmasq
+
+
