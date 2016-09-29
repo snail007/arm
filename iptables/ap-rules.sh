@@ -9,3 +9,4 @@ iptables -A FORWARD -i $NET -o $WLAN -m state --state RELATED,ESTABLISHED -j ACC
 iptables -A FORWARD -i $WLAN -o $NET -j ACCEPT
 
 
+bash save.sh

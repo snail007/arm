@@ -4,6 +4,6 @@ iptables -X
 iptables -t nat -F
 iptables -t nat -X
 
-netfilter-persistent save
+bash save.sh
 
 
