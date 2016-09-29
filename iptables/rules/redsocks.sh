@@ -1,14 +1,15 @@
 #!/bin/bash
 
-#可以联网的IP地址，非常重要
-InternetIP=10.69.10.229
+#运行shadowsocks服务器的IP地址，非常重要，应该是redsocks配置里的ip:
+# type = shadowsocks;ip=xxx
+shadowsocksIP=10.69.10.229
 
 #create a new chain named SHADOWSOCKS
 iptables -t nat -N SHADOWSOCKS
 
 # Ignore your shadowsocks server's addresses
 # It's very IMPORTANT, just be careful.
-iptables -t nat -A SHADOWSOCKS -d $InternetIP -j RETURN
+iptables -t nat -A SHADOWSOCKS -d $shadowsocksIP -j RETURN
 
 # Ignore LANs IP address
 iptables -t nat -A SHADOWSOCKS -d 0.0.0.0/8 -j RETURN
