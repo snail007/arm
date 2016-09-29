@@ -18,7 +18,6 @@ if [ -z "$HASWLAN" ] ;then
     ifconfig $APWLAN down
     ifdown $APWLAN
     ifup $APWLAN
-    iptables-restore < /etc/iptables.ipv4.nat
     echo "$APWLAN up?false,ifup"
 fi
 

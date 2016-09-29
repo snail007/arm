@@ -1,4 +1,4 @@
-apt-get -y install hostapd udhcpd dnsmasq
+apt-get -y install hostapd udhcpd dnsmasq iptables-persistent
 
 ####################udhcpd########################
 if [ ! -f /etc/default/udhcpd.orig ] ;then
@@ -57,24 +57,20 @@ read NET
 if [ -z $NET ];then
     NET=eth0
 fi
-iptables -F
-iptables -X
+
 iptables -t nat -A POSTROUTING -o $NET -j MASQUERADE
 iptables -A FORWARD -i $NET -o $WLAN -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i $WLAN -o $NET -j ACCEPT
 
-sysctl -p
-
-sh -c "iptables-save > /etc/iptables.ipv4.nat"
-
-sysctl -p
-HASNAT=`grep -rn "iptables.ipv4.nat" /etc/network/interfaces`
-if [ -z $HASNAT ];then
-    echo "up iptables-restore < /etc/iptables.ipv4.nat">>/etc/network/interfaces
-    echo "iptables.ipv4.nat added"
-else
-    echo "iptables.ipv4.nat skiped"
+if [ -z $(which netfilter-persistent) ] ;then
+    netfilter-persistent save
 fi
+
+if [ -z $(which iptables-persistent) ] ;then
+    iptables-persistent save
+fi
+
+sysctl -p
 
 echo "iface $WLAN inet static">>/etc/network/interfaces.d/$WLAN
 echo "        address 192.168.8.1">>/etc/network/interfaces.d/$WLAN
