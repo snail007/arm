@@ -62,11 +62,11 @@ iptables -t nat -A POSTROUTING -o $NET -j MASQUERADE
 iptables -A FORWARD -i $NET -o $WLAN -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i $WLAN -o $NET -j ACCEPT
 
-if [ -z $(which netfilter-persistent) ] ;then
+if [ ! -z $(which netfilter-persistent) ] ;then
     netfilter-persistent save
 fi
 
-if [ -z $(which iptables-persistent) ] ;then
+if [ ! -z $(which iptables-persistent) ] ;then
     iptables-persistent save
 fi
 
