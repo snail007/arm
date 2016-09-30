@@ -1,8 +1,7 @@
 #!/bin/bash
 
-#运行shadowsocks服务器的IP地址，非常重要，应该是redsocks配置里的ip:
-# type = shadowsocks;ip=xxx
-shadowsocksIP=10.69.10.229
+#运行shadowsocks服务的服务器IP地址:
+shadowsocksIP=x.x.x.x
 
 #create a new chain named SHADOWSOCKS
 iptables -t nat -N SHADOWSOCKS
