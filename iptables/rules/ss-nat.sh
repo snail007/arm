@@ -4,9 +4,10 @@ PWD=$(dirname $(readlink -f $0))
 
 case $1 in
     remove)
-        iptables -t nat -D OUTPUT -p tcp -j SHADOWSOCKS
-        iptables -t nat -F SHADOWSOCKS
-        iptables -t nat -X SHADOWSOCKS
+        iptables -t nat -D OUTPUT -p tcp -j SHADOWSOCKS >/dev/null 2>&1
+        iptables -t nat -F SHADOWSOCKS >/dev/null 2>&1
+        iptables -t nat -X SHADOWSOCKS >/dev/null 2>&1
+        bash $PWD/../save.sh
     ;;
     install)
         #运行ss-server服务端服务器IP地址:

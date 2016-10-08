@@ -13,20 +13,7 @@ apt-get -y install build-essential lrzsz git gcc g++ zlib1g-dev \
  ethtool supervisor iftop htop iotop asciidoc xmlto apg ipset \
  curl
 
-if [ ! -f /usr/local/bin/ss-server ] ; then
-    git clone https://github.com/shadowsocks/shadowsocks-libev.git
-    cd shadowsocks-libev
-    ./configure
-    make && make install
-    cd ../
-    rm -rf shadowsocks-libev
-fi
 
-curl 'http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest' | grep ipv4 | grep CN | awk -F\| '{ printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > /tmp/chnroute.txt
-
-if [ $(ls -l /tmp/chnroute.txt | awk '{ print $5 }') -gt 10000 ] ; then
-    mv /tmp/chnroute.txt /etc/chnroute.txt
-fi
 
 
 
