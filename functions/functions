@@ -123,10 +123,12 @@ pm_menu_print(){
 }
 
 pm_native_cfg_get(){
+
     val=$(pm_cfg_get $1)
+
     if [ -z "$val" ] ;then
         val=$(pm_read "$2" "$3")
         pm_cfg_write "$1" "$val"
     fi
-    echo -e $val
+    echo -n $val
 }

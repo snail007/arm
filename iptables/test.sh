@@ -4,9 +4,9 @@ ROOT_DIR=$(dirname $(readlink -f $0))/..
 cd $ROOT_DIR
 
  
-echo $(pm_read "请输入ss本地端口：")
+ss_local_port=$(pm_native_cfg_get "ss_local_ip" "请输入ss本地端口")
 
-
+echo $ss_local_port
 
 #for rule in `ls rules/*.sh`
 #    do
