@@ -1,4 +1,18 @@
 #!/bin/bash
+PWD=$(dirname $(readlink -f $0))
+. $PWD/../../functions/functions
+
+if [ "$1" = "remove" ] ;then
+    iptables -t nat -D OUTPUT -p tcp -j SHADOWSOCKS
+    iptables -t nat -F SHADOWSOCKS
+    iptables -t nat -X SHADOWSOCKS
+    exit 0
+fi
+
+ss_server_ip=$(pm_native_cfg_get "ss_server" "请输入ss-server服务器IP")
+echo $ss_server_ip
+exit
+
 
 #运行shadowsocks服务的服务器IP地址:
 shadowsocksIP=x.x.x.x
@@ -70,7 +84,7 @@ iptables -t nat -A SHADOWSOCKS -d 222.0.0.0/8 -j RETURN
 iptables -t nat -A SHADOWSOCKS -d 223.0.0.0/8 -j RETURN
 
 # Anything else should be redirected to shadowsocks's local port
-iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports 1080
+iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports $ss_local_port
 
 # Apply the rules to nat client
 iptables -t nat -A PREROUTING -p tcp -j SHADOWSOCKS
@@ -78,4 +92,4 @@ iptables -t nat -A PREROUTING -p tcp -j SHADOWSOCKS
 iptables -t nat -A OUTPUT -p tcp -j SHADOWSOCKS
 
 
-bash save.sh
+bash $PWD/../save.sh

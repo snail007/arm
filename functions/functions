@@ -1,19 +1,46 @@
 #!/bin/bash
 
+if [ -z "$PM_DEFAULT_CONF" ] ;then
+    PM_DEFAULT_CONF=/etc/pm-tool/pm.conf
+fi
+
 pm_menu_default_set(){
     export PM_MENU_DEFAULT=$1
+}
+pm_menu_value_hook_set(){
+    export PM_MENU_VALUE_HOOK=$1
+}
+pm_menu_output_get(){
+    echo $PM_FUNC_OUTPUT
+}
+#####################################
+
+pm_cfg_init(){
+    [ ! -d $(dirname $PM_DEFAULT_CONF) ] && mkdir $(dirname $PM_DEFAULT_CONF)
+    [ ! -f $PM_DEFAULT_CONF ] && touch $PM_DEFAULT_CONF
+}
+
+pm_cfg_get(){
+    pm_cfg_init
+   eval "sed -n -e 's/^[    ]*$1[    ]*=[    ]*//p' $PM_DEFAULT_CONF | tr -d '     ' "
+}
+pm_cfg_write(){
+    pm_cfg_init
+    if [ -z $(egrep "^ *$1 *=.*" $PM_DEFAULT_CONF) ] ;then
+        echo $1=$2>>$PM_DEFAULT_CONF
+    else
+        eval "sed -i 's/^[    ]*$1[    ]*=.*/$1=$2/' $PM_DEFAULT_CONF"
+    fi
 }
 
 pm_menu_default_get(){
     echo $PM_MENU_DEFAULT
 }
-
-pm_menu_value_hook_set(){
-    export PM_MENU_VALUE_HOOK=$1
-}
-
 pm_menu_value_hook_get(){
     echo $PM_MENU_VALUE_HOOK
+}
+pm_menu_output_set(){
+    export PM_FUNC_OUTPUT=$*
 }
 
 pm_is_number(){
@@ -22,13 +49,6 @@ pm_is_number(){
     else
       return 1
     fi
-}
-
-pm_menu_output_get(){
-    echo $PM_FUNC_OUTPUT
-}
-pm_menu_output_set(){
-    export PM_FUNC_OUTPUT=$*
 }
 
 pm_interfaces_names(){
@@ -43,6 +63,25 @@ pm_interface_ip(){
                 break
         fi
     done
+}
+
+pm_filesize(){
+    ls -l $1 | awk '{ print $5 }'
+}
+
+pm_read(){
+    if [ -z "$2" ] ;then
+        while [ -z "$var" ]
+        do
+            read -p "$1:" var
+        done
+    else
+        read -p "$1,Default[$2]:" var
+        if [ -z "$var" ] ;then
+            var=$2
+        fi
+    fi
+    echo $var|tr -d "   "
 }
 
 pm_menu_print(){
@@ -83,4 +122,11 @@ pm_menu_print(){
     pm_menu_output_set ${items[$choose]}
 }
 
-
+pm_native_cfg_get(){
+    val=$(pm_cfg_get $1)
+    if [ -z "$val" ] ;then
+        val=$(pm_read "$2" "$3")
+        pm_cfg_write "$1" "$val"
+    fi
+    echo -e $val
+}
