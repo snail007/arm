@@ -33,19 +33,21 @@ case $1 in
         iptables -t nat -A SHADOWSOCKS -d 224.0.0.0/4 -j RETURN
         iptables -t nat -A SHADOWSOCKS -d 240.0.0.0/4 -j RETURN
 
-        if [ ! -e "/etc/chnroute.txt" ] ;then
-            bash $PWD/../chn_ip.sh
-        fi
+        if [ "$2" = "--ipset" ] ;then
+                if [ ! -e "/etc/chnroute.txt" ] ;then
+                    bash $PWD/../chn_ip.sh
+                fi
 
-        if [ -e "/etc/chnroute.txt" ] ;then
-            # Setup the ipset
-            ipset -N chnroute hash:net maxelem 65536
+                if [ -e "/etc/chnroute.txt" ] ;then
+                    # Setup the ipset
+                    ipset -N chnroute hash:net maxelem 65536
 
-            for ip in $(cat '/etc/chnroute.txt'); do
-              ipset add chnroute $ip
-            done
-            # Allow connection to chinese IPs
-            iptables -t nat -A SHADOWSOCKS -p tcp -m set --match-set chnroute dst -j RETURN
+                    for ip in $(cat '/etc/chnroute.txt'); do
+                      ipset add chnroute $ip
+                    done
+                    # Allow connection to chinese IPs
+                    iptables -t nat -A SHADOWSOCKS -p tcp -m set --match-set chnroute dst -j RETURN
+                fi
         fi
 
         # Ignore Asia IP address
