@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-set -eu
+set -e
 if [ -z "$2" ] ;then
     echo "$0  <daemon_command> <daemon_pid_file_path>"
     exit 1
