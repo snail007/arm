@@ -110,3 +110,6 @@ case $1 in
     ;;
 esac
 
+sleep 3
+
+exit 0

@@ -12,3 +12,7 @@ iptables -A FORWARD -i $ap_if_net -o $ap_if -m state --state RELATED,ESTABLISHED
 iptables -A FORWARD -i $ap_if -o $ap_if_net -j ACCEPT
 
 bash $PWD/../save.sh
+
+sleep 3
+
+exit 0

@@ -7,3 +7,6 @@ iptables -t nat -X
 bash save.sh
 
 
+sleep 3
+
+exit 0
