@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ROOT_DIR=$(dirname $(readlink -f $0))
 . $ROOT_DIR/functions/functions
 cd $ROOT_DIR
@@ -12,9 +14,6 @@ apt-get -y install build-essential lrzsz git gcc g++ zlib1g-dev \
  gawk debhelper dh-systemd init-system-helpers pkg-config \
  ethtool supervisor iftop htop iotop asciidoc xmlto apg ipset \
  curl
-
-
-
 
 
 
