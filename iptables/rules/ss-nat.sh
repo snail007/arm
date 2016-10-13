@@ -11,7 +11,9 @@ case $1 in
     ;;
     install)
         #运行ss-server服务端服务器IP地址:
-        ss_server_ip=$(pm_native_cfg_get "ss_server_ip" "请输入ss-server服务器IP")
+        ss_server_ip=$(pm_native_cfg_get "ss_server_ip" "请输入ss-server服务器IP,多个IP用逗号(,)分隔")
+        ss_server_ips=(${ss_server_ip//,/ })
+
 
         #本地运行ss-local客户端监听的端口:
         ss_local_port=$(pm_native_cfg_get "ss_local_port" "请输入本地运行ss-local客户端监听的端口" 1080)
@@ -21,7 +23,10 @@ case $1 in
 
         # Ignore your shadowsocks server's addresses
         # It's very IMPORTANT, just be careful.
-        iptables -t nat -A SHADOWSOCKS -d $ss_server_ip -j RETURN
+        for ip in "${ss_server_ips[@]}";
+        do
+            iptables -t nat -A SHADOWSOCKS -d $ip -j RETURN
+        done
 
         # Ignore LANs IP address
         iptables -t nat -A SHADOWSOCKS -d 0.0.0.0/8 -j RETURN
